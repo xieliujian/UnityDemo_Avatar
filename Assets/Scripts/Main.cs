@@ -149,7 +149,7 @@ public class Main : MonoBehaviour
 
     private Character mCharacter = null;
 
-    private static bool mCombine = false;
+    private bool mCombine = false;
 
     #endregion
 
