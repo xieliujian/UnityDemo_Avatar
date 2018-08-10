@@ -1,4 +1,3 @@
-# UnityDemo_Avatar
 
 # Unity的Avatar换装实现
 
