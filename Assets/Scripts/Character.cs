@@ -2,17 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class FunctionUtil
-{
-    public static void Reset(this GameObject go, GameObject parent)
-    {
-        go.transform.parent = parent.transform;
-        go.transform.position = Vector3.zero;
-        go.transform.rotation = Quaternion.identity;
-        go.transform.localScale = Vector3.one;
-    }
-}
-
 public class Character : MonoBehaviour
 {
     #region 变量
@@ -92,11 +81,7 @@ public class Character : MonoBehaviour
         ChangeEquipUnCombine((int)EPart.EP_Shoes, avatarres);
         ChangeEquipUnCombine((int)EPart.EP_Top, avatarres);
 
-        if (mAnim != null)
-        {
-            mAnim.wrapMode = WrapMode.Loop;
-            mAnim.Play("walk");
-        }
+        ChangeAnim(avatarres);
     }
 
     private void GenerateCombine(AvatarRes avatarres)
@@ -143,14 +128,7 @@ public class Character : MonoBehaviour
         r.bones = bones.ToArray();
         r.materials = materials.ToArray();
 
-        if (mAnim != null)
-        {
-            if (!mAnim.IsPlaying("walk"))
-            {
-                mAnim.wrapMode = WrapMode.Loop;
-                mAnim.Play("walk");
-            }
-        }
+        ChangeAnim(avatarres);
     }
 
     private void ChangeEquipCombine(int type, AvatarRes avatarres, ref List<CombineInstance> combineInstances, 
@@ -294,6 +272,16 @@ public class Character : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void ChangeAnim(AvatarRes avatarres)
+    {
+        if (mAnim == null)
+            return;
+
+        AnimationClip animclip = avatarres.mAnimList[avatarres.mAnimIdx];
+        mAnim.wrapMode = WrapMode.Loop;
+        mAnim.Play(animclip.name);
     }
 
     #endregion

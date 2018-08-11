@@ -96,7 +96,7 @@ public class GenerateResEditor : Editor
 
         anim = obj.AddComponent<Animation>();
 
-        List<AnimationClip> clips = CollectAll<AnimationClip>(animpath);
+        List<AnimationClip> clips = FunctionUtil.CollectAll<AnimationClip>(animpath);
         foreach(var clip in clips)
             anim.AddClip(clip, clip.name);
 
@@ -139,7 +139,7 @@ public class GenerateResEditor : Editor
             Directory.CreateDirectory(prefabpath);
         }
 
-        List<Material> materials = CollectAll<Material>(matpath);
+        List<Material> materials = FunctionUtil.CollectAll<Material>(matpath);
         foreach (SkinnedMeshRenderer smr in srcobj.GetComponentsInChildren<SkinnedMeshRenderer>(true))
         {
             GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(smr.gameObject);
@@ -179,21 +179,6 @@ public class GenerateResEditor : Editor
 
             GameObject.DestroyImmediate(rendererParent);
         }
-    }
-
-    public static List<T> CollectAll<T>(string path) where T : UnityEngine.Object
-    {
-        List<T> l = new List<T>();
-        string[] files = Directory.GetFiles(path);
-
-        foreach (string file in files)
-        {
-            if (file.Contains(".meta")) continue;
-            T asset = (T)AssetDatabase.LoadAssetAtPath(file, typeof(T));
-            if (asset == null) throw new Exception("Asset is not " + typeof(T) + ": " + file);
-            l.Add(asset);
-        }
-        return l;
     }
 
     private static void GenerateAllAnim(List<GameObject> objs)

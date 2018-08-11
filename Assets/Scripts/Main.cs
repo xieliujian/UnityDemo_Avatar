@@ -14,6 +14,7 @@ public class AvatarRes
     public List<GameObject> mPantsList = new List<GameObject>();
     public List<GameObject> mShoesList = new List<GameObject>();
     public List<GameObject> mTopList = new List<GameObject>();
+    public List<AnimationClip> mAnimList = new List<AnimationClip>();
 
     public int mEyesIdx = 0;
     public int mFaceIdx = 0;
@@ -21,6 +22,7 @@ public class AvatarRes
     public int mPantsIdx = 0;
     public int mShoesIdx = 0;
     public int mTopIdx = 0;
+    public int mAnimIdx = 0;
     
     public void Reset()
     {
@@ -30,6 +32,21 @@ public class AvatarRes
         mPantsIdx = 0;
         mShoesIdx = 0;
         mTopIdx = 0;
+        mAnimIdx = 0;
+    }
+
+    public void AddAnimIdx()
+    {
+        mAnimIdx++;
+        if (mAnimIdx >= mAnimList.Count)
+            mAnimIdx = 0;
+    }
+
+    public void ReduceAnimIdx()
+    {
+        mAnimIdx--;
+        if (mAnimIdx < 0)
+            mAnimIdx = mAnimList.Count - 1;
     }
 
     public void AddIndex(int type)
@@ -202,6 +219,25 @@ public class Main : MonoBehaviour
         AddCategory((int)EPart.EP_Pants, "Legs", "item_pants");
         AddCategory((int)EPart.EP_Shoes, "Feet", "item_boots");
 
+        // anim
+        GUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("<", GUILayout.Width(buttonWidth), GUILayout.Height(typeheight)))
+        {
+            mAvatarRes.ReduceAnimIdx();
+            mCharacter.ChangeAnim(mAvatarRes);
+        }
+
+        GUILayout.Box("Anim", GUILayout.Width(typeWidth), GUILayout.Height(typeheight));
+
+        if (GUILayout.Button(">", GUILayout.Width(buttonWidth), GUILayout.Height(typeheight)))
+        {
+            mAvatarRes.AddAnimIdx();
+            mCharacter.ChangeAnim(mAvatarRes);
+        }
+
+        GUILayout.EndHorizontal();
+
         GUILayout.EndArea();
     }
 
@@ -270,6 +306,10 @@ public class Main : MonoBehaviour
             avatarres.mPantsList = FindRes(golist, PantsName);
             avatarres.mShoesList = FindRes(golist, ShoesName);
             avatarres.mTopList = FindRes(golist, TopName);
+
+            string animpath = "Assets/Anims/" + dirname + "/";
+            List<AnimationClip> clips = FunctionUtil.CollectAll<AnimationClip>(animpath);
+            avatarres.mAnimList.AddRange(clips);
         }
     }
 
